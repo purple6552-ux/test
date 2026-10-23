@@ -3,6 +3,14 @@
    보일 법칙, 샤를 법칙, 보일·샤를 법칙 통합 가상 실험실
    ======================================================== */
 
+/* 전체 페이지 배경색 (주황색 테마) */
+body {
+  background: linear-gradient(135deg, #ff944d 0%, #ff7700 50%, #e65c00 100%); /* 세련된 주황색 그라데이션 */
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
+}
+
 .gas-app-container {
   max-width: 1280px;
   margin: 1.5rem auto 3.5rem;
