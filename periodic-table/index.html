@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주기율표와 원소의 주기성 탐구 — Science Lab Hub</title>
+  <meta name="description" content="고등학교 통합과학 원소의 주기성과 주기율표 개념을 인터랙티브하게 탐구하는 가상 실험실">
+
+  <!-- 플랫폼 공통 스타일시트 -->
+  <link rel="stylesheet" href="../../assets/css/common.css">
+  <!-- 개별 실험 전용 스타일시트 -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 공통 상단 네비게이션은 nav.js 스크립트에 의해 최상단에 자동 생성됩니다 -->
+
+  <main class="pt-app-container">
+    <!-- 상단 소개 및 탐구 제어 패널 -->
+    <header class="pt-header-panel">
+      <div class="pt-title-row">
+        <div class="pt-title-group">
+          <h1>
+            <span>🧪</span> 주기율표와 원소의 주기성 탐구
+          </h1>
+          <p>
+            원소 카드를 클릭하여 <strong>원자가 전자 수, 전자 배치, 보어 원자 모형, 동위 원소</strong> 정보를 탐구해 보세요.
+          </p>
+        </div>
+
+        <!-- 탐구 제어 툴바 -->
+        <div class="pt-tool-group">
+          <!-- 1. 분류별 하이라이트 필터 -->
+          <div>
+            <label for="pt-filter-select" class="pt-tool-label">원소 분류:</label>
+            <select id="pt-filter-select" class="pt-filter-select" aria-label="원소 분류 필터">
+              <option value="all">전체 원소 보기</option>
+              <option value="cat-alkali-metal">알칼리 금속 (1족)</option>
+              <option value="cat-alkaline-earth">알칼리 토금속 (2족)</option>
+              <option value="cat-transition-metal">전이 금속 (3~12족)</option>
+              <option value="cat-post-transition">전이후 금속</option>
+              <option value="cat-metalloid">준금속</option>
+              <option value="cat-reactive-nonmetal">반응성 비금속 (H, C, N, O 등)</option>
+              <option value="cat-halogen">할로젠 (17족)</option>
+              <option value="cat-noble-gas">비활성 기체 (18족)</option>
+              <option value="cat-lanthanide">란타넘족</option>
+              <option value="cat-actinide">악티늄족</option>
+            </select>
+          </div>
+
+          <!-- 2. 주기성 시각화 히트맵 모드 -->
+          <div>
+            <label for="pt-mode-select" class="pt-tool-label">주기성 탐구 모드:</label>
+            <select id="pt-mode-select" class="pt-mode-select" aria-label="주기성 탐구 모드">
+              <option value="default">기본 보기</option>
+              <option value="valElectrons">원자가 전자 수 (족 규칙성)</option>
+              <option value="atomicRadius">원자 반지름 (pm)</option>
+              <option value="electronegativity">전기 음성도 (Pauling)</option>
+              <option value="ionizationEnergy">제1 이온화 에너지 (kJ/mol)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 색상 범례 (Legend) -->
+      <div class="pt-legend" aria-label="원소 분류 범례">
+        <span class="pt-legend-item" data-category="cat-alkali-metal"><span class="legend-color-dot" style="background:#fca5a5;"></span>알칼리 금속</span>
+        <span class="pt-legend-item" data-category="cat-alkaline-earth"><span class="legend-color-dot" style="background:#fdba74;"></span>알칼리 토금속</span>
+        <span class="pt-legend-item" data-category="cat-transition-metal"><span class="legend-color-dot" style="background:#fde047;"></span>전이 금속</span>
+        <span class="pt-legend-item" data-category="cat-post-transition"><span class="legend-color-dot" style="background:#c7d2fe;"></span>전이후 금속</span>
+        <span class="pt-legend-item" data-category="cat-metalloid"><span class="legend-color-dot" style="background:#ddd6fe;"></span>준금속</span>
+        <span class="pt-legend-item" data-category="cat-reactive-nonmetal"><span class="legend-color-dot" style="background:#86efac;"></span>반응성 비금속</span>
+        <span class="pt-legend-item" data-category="cat-halogen"><span class="legend-color-dot" style="background:#5eead4;"></span>할로젠</span>
+        <span class="pt-legend-item" data-category="cat-noble-gas"><span class="legend-color-dot" style="background:#7dd3fc;"></span>비활성 기체</span>
+        <span class="pt-legend-item" data-category="cat-lanthanide"><span class="legend-color-dot" style="background:#f0abfc;"></span>란타넘족</span>
+        <span class="pt-legend-item" data-category="cat-actinide"><span class="legend-color-dot" style="background:#fda4af;"></span>악티늄족</span>
+      </div>
+    </header>
+
+    <!-- 주기율표 본문 그리드 래퍼 (크롬북/태블릿 가로 스크롤 가능) -->
+    <div class="table-scroll-wrapper">
+      <div id="periodic-grid" class="periodic-grid" aria-label="18열 표준 주기율표">
+        <!-- script.js에 의해 동적으로 렌더링됩니다 -->
+      </div>
+
+      <!-- 하단 란타넘족 / 악티늄족 (f-구역) -->
+      <div class="f-block-section">
+        <div id="f-block-grid" class="f-block-grid" aria-label="란타넘족 및 악티늄족 그리드">
+          <!-- script.js에 의해 동적으로 렌더링됩니다 -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================
+       원소 상세 정보 모달 창 (Modal)
+       ======================================================== -->
+  <div id="element-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-elem-name">
+    <div class="modal-dialog">
+      <!-- 모달 상단 헤더 -->
+      <div class="modal-header">
+        <div class="modal-header-main">
+          <div class="modal-symbol-badge">
+            <span class="modal-symbol-num" id="modal-elem-num">1</span>
+            <span class="modal-symbol-text" id="modal-elem-symbol">H</span>
+          </div>
+          <div class="modal-title-info">
+            <h2>
+              <span id="modal-elem-name">수소</span>
+              <span class="modal-eng-name" id="modal-elem-eng">(Hydrogen)</span>
+            </h2>
+            <div class="modal-tags">
+              <span class="badge-grade" id="modal-badge-group">1주기 1족</span>
+              <span class="badge-subject 화학" id="modal-badge-cat">반응성 비금속</span>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="닫기">✕</button>
+      </div>
+
+      <!-- 모달 본문 콘텐츠 (좌측: 원자 모형 시뮬레이션, 우측: 기본 성질 및 동위원소) -->
+      <div class="modal-body">
+        <!-- 1. 보어 원자 모형 시각화 (Canvas 애니메이션) - 좌측 배치 -->
+        <div class="modal-section-card bohr-canvas-container">
+          <h3 class="modal-section-title">⚛️ 보어 원자 모형 시뮬레이션</h3>
+          <canvas id="bohr-canvas" width="280" height="260" aria-label="보어 원자 모형 시각화"></canvas>
+          <div class="electron-shells-legend" id="bohr-shells-text">
+            전자 껍질별 배치 → K껍질: 1개
+          </div>
+        </div>
+
+        <!-- 2. 원소 기본 물리·화학적 성질 및 동위원소 - 우측 배치 -->
+        <div class="modal-section-card">
+          <h3 class="modal-section-title">📊 원소 기본 성질</h3>
+          <table class="prop-table">
+            <tbody>
+              <tr>
+                <th>주기 / 족</th>
+                <td id="modal-prop-group-period">1주기 1족</td>
+              </tr>
+              <tr>
+                <th>원자가 전자 수</th>
+                <td id="modal-prop-val-electrons">1개</td>
+              </tr>
+              <tr>
+                <th>전자 배치</th>
+                <td id="modal-prop-config">1s¹</td>
+              </tr>
+              <tr>
+                <th>평균 원자량</th>
+                <td id="modal-prop-mass">1.008 amu</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 동위원소 선택 인터랙션 영역 -->
+          <div class="isotope-selector-group">
+            <span class="pt-tool-label">대표 동위 원소 선택:</span>
+            <div id="isotope-buttons" class="isotope-pills">
+              <!-- script.js에서 동적 버튼 생성 -->
+            </div>
+            <table class="prop-table" style="margin-top: 0.6rem;">
+              <tbody>
+                <tr>
+                  <th>양성자 수 (p⁺)</th>
+                  <td id="modal-prop-protons">1개</td>
+                </tr>
+                <tr>
+                  <th>중성자 수 (n⁰)</th>
+                  <td id="modal-prop-neutrons">0개</td>
+                </tr>
+                <tr>
+                  <th>선택된 질량수 (A)</th>
+                  <td id="modal-prop-mass-number" style="color:var(--primary-dark);">1</td>
+                </tr>
+                <tr>
+                  <th>동위원소 존재비</th>
+                  <td id="modal-prop-abundance">99.98%</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="isotope-guide" id="isotope-guide-text">
+              <!-- 선택된 동위원소에 맞춤형 가이드 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 원소의 분류 및 주요 화학적 성질/실생활 특징 -->
+        <div class="chemistry-info-card">
+          <h4>🧪 주요 화학적 성질 및 특징</h4>
+          <p id="modal-prop-summary">
+            원소의 설명 내용이 표시됩니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 플랫폼 공통 데이터 및 공통 내비게이션 바 로드 -->
+  <script src="../../assets/js/labs-data.js"></script>
+  <script src="../../assets/js/nav.js" data-current-lab="periodic-table"></script>
+
+  <!-- 주기율표 전용 자바스크립트 로드 -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+/* ========================================================
+   Science Lab Hub - 주기율표 탐구 실험실 전용 스타일 (style.css)
+   고등학교 통합과학 원소의 주기성 인터랙티브 학습 앱 스타일시트
+   ======================================================== */
+
+.pt-app-container {
+  max-width: 1360px;
+  margin: 1.5rem auto 3rem;
+  padding: 0 1rem;
+}
+
+/* 상단 소개 및 탐구 제어 헤더 */
+.pt-header-panel {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem 1.75rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.25rem;
+}
+
+.pt-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pt-title-group h1 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pt-title-group p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* 탐구 제어 도구 (분류 필터 및 주기성 히트맵 모드) */
+.pt-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.pt-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.pt-tool-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.pt-filter-select, .pt-mode-select {
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: #f8fafc;
+  color: var(--text-main);
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.pt-filter-select:focus, .pt-mode-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* 주기율표 범례 (Legend) */
+.pt-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.pt-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0.2rem 0.5rem;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition-fast);
+}
+
+.pt-legend-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.legend-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ========================================================
+   주기율표 그리드 래퍼 (크롬북/태블릿 가로 스크롤 지원)
+   ======================================================== */
+.table-scroll-wrapper {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 표준 18열 주기율표 그리드 */
+.periodic-grid {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(62px, 1fr));
+  grid-auto-rows: 72px;
+  gap: 4px;
+  min-width: 1140px; /* 크롬북 등 작은 화면에서도 형태가 깨지지 않도록 최소 폭 설정 */
+}
+
+/* 주기 번호(좌측 행 번호) 라벨 */
+.period-label, .group-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  user-select: none;
+}
+
+/* 개별 원소 카드 타일 */
+.element-tile {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 4px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  position: relative;
+  user-select: none;
+}
+
+.element-tile:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+  border-color: #3b82f6;
+}
+
+.element-tile.dimmed {
+  opacity: 0.18;
+  filter: grayscale(80%);
+}
+
+.element-tile.highlighted {
+  box-shadow: 0 0 0 2px #2563eb, var(--shadow-md);
+  transform: translateY(-2px);
+  z-index: 5;
+}
+
+/* 타일 내부 요소 */
+.tile-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  line-height: 1;
+}
+
+.tile-number {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.tile-mass {
+  font-size: 0.6rem;
+  color: #94a3b8;
+}
+
+.tile-symbol {
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.1;
+  color: var(--text-main);
+  margin-top: 2px;
+}
+
+.tile-name {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tile-val-property {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-align: center;
+  color: #1e3a8a;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 2px;
+}
+
+/* 란타넘/악티늄족 표시 빈 슬롯 카드 */
+.series-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-sm);
+  background: #f8fafc;
+  font-size: 0.65rem;
+  color: #64748b;
+  text-align: center;
+  padding: 4px;
+}
+
+/* 하단 란타넘족, 악티늄족 그리드 */
+.f-block-section {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.f-block-grid {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(62px, 1fr));
+  grid-auto-rows: 72px;
+  gap: 4px;
+  min-width: 1140px;
+}
+
+/* 원소 분류별 배경 색상 테마 (부드럽고 세련된 파스텔 톤) */
+.cat-alkali-metal       { background-color: #fee2e2; border-color: #fca5a5; } /* 알칼리 금속 */
+.cat-alkaline-earth     { background-color: #ffedd5; border-color: #fdba74; } /* 알칼리 토금속 */
+.cat-transition-metal   { background-color: #fef9c3; border-color: #fde047; } /* 전이 금속 */
+.cat-post-transition    { background-color: #e0e7ff; border-color: #c7d2fe; } /* 전이후 금속 */
+.cat-metalloid          { background-color: #ede9fe; border-color: #ddd6fe; } /* 준금속 */
+.cat-reactive-nonmetal  { background-color: #dcfce7; border-color: #86efac; } /* 반응성 비금속 (탄소, 질소, 산소 등) */
+.cat-halogen            { background-color: #ccfbf1; border-color: #5eead4; } /* 할로젠 */
+.cat-noble-gas          { background-color: #e0f2fe; border-color: #7dd3fc; } /* 비활성 기체 */
+.cat-lanthanide         { background-color: #fae8ff; border-color: #f0abfc; } /* 란타넘족 */
+.cat-actinide           { background-color: #ffe4e6; border-color: #fda4af; } /* 악티늄족 */
+
+/* ========================================================
+   원소 상세 정보 모달 창 (Modal Window)
+   ======================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-dialog {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  transform: translateY(20px) scale(0.98);
+  transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-backdrop.open .modal-dialog {
+  transform: translateY(0) scale(1);
+}
+
+/* 모달 헤더 */
+.modal-header {
+  padding: 1.5rem 1.75rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
+}
+
+.modal-header-main {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.modal-symbol-badge {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--primary-color);
+  background: #eff6ff;
+  line-height: 1;
+}
+
+.modal-symbol-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.modal-symbol-text {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.modal-title-info h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-eng-name {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.modal-tags {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.modal-close-btn {
+  background: #f1f5f9;
+  border: none;
+  font-size: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.modal-close-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+}
+
+/* 모달 본문 레이아웃 */
+.modal-body {
+  padding: 1.5rem 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .modal-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 섹션 카드 */
+.modal-section-card {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.modal-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* 원소 기본 성질 테이블 */
+.prop-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.prop-table tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.prop-table tr:last-child {
+  border-bottom: none;
+}
+
+.prop-table th {
+  text-align: left;
+  padding: 0.45rem 0;
+  color: var(--text-muted);
+  font-weight: 600;
+  width: 42%;
+}
+
+.prop-table td {
+  padding: 0.45rem 0;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+/* 동위원소 선택 인터랙션 영역 */
+.isotope-selector-group {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+.isotope-pills {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+
+.isotope-btn {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.isotope-btn.active {
+  background: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+.isotope-guide {
+  font-size: 0.78rem;
+  color: #2563eb;
+  margin-top: 0.5rem;
+  background: #eff6ff;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+}
+
+/* 보어 원자 모형 시각화 캔버스 카드 */
+.bohr-canvas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#bohr-canvas {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  display: block;
+}
+
+.electron-shells-legend {
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+  word-break: keep-all;
+}
+
+.electron-shells-legend strong {
+  color: var(--primary-dark);
+}
+
+/* 화학적 성질 및 특징 설명 영역 */
+.chemistry-info-card {
+  grid-column: 1 / -1;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.chemistry-info-card h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}

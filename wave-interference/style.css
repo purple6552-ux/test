@@ -1,0 +1,540 @@
+/* ========================================================
+   Science Lab Hub - 파동의 중첩과 간섭 시뮬레이터 스타일 (style.css)
+   기본 성질, 1차원 중첩, 2차원 수면파 간섭 탐구 웹앱
+   ======================================================== */
+
+.wave-app-container {
+  max-width: 1320px;
+  margin: 1.5rem auto 3.5rem;
+  padding: 0 1.25rem;
+}
+
+/* 상단 소개 및 탭 바 */
+.wave-header-panel {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem 1.75rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.wave-header-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.wave-title-group h1 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.wave-title-group p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* 3대 탐구 활동 탭 */
+.wave-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 0.25rem;
+  overflow-x: auto;
+}
+
+.wave-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.wave-tab-btn:hover {
+  color: var(--primary-color);
+  background: #f8fafc;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.wave-tab-btn.active {
+  color: var(--primary-dark);
+  border-bottom-color: var(--primary-color);
+  background: #eff6ff;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+/* ========================================================
+   실험 메인 작업 공간 (2열 그리드)
+   ======================================================== */
+.sim-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 980px) {
+  .sim-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 좌측: 캔버스 시뮬레이터 카드 */
+.sim-stage-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.stage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stage-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 재생 제어 바 */
+.playback-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8fafc;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.play-btn {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all var(--transition-fast);
+}
+
+.play-btn:hover {
+  background: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+.play-btn.active {
+  background: var(--primary-dark);
+  color: #ffffff;
+  border-color: var(--primary-dark);
+}
+
+.speed-select {
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/* 캔버스 컨테이너 */
+.canvas-holder {
+  background: #0f172a;
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+  min-height: 380px;
+}
+
+#wave-canvas {
+  background: #1e293b;
+  border-radius: var(--radius-sm);
+  display: block;
+  max-width: 100%;
+  cursor: crosshair;
+}
+
+/* 캔버스 하단 범례 및 실시간 계산 수치 바 */
+.canvas-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.formula-highlight {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  color: #1e40af;
+  font-weight: 700;
+}
+
+/* 우측: 변인 조작 및 실시간 분석 카드 */
+.sim-controls-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.control-panel-box {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.35rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.panel-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* 슬라이더 스타일 */
+.wave-slider-group {
+  margin-bottom: 0.9rem;
+}
+
+.wave-slider-group:last-child {
+  margin-bottom: 0;
+}
+
+.slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.35rem;
+}
+
+.slider-val-badge {
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.badge-wave1 { background: #dbeafe; color: #1e40af; } /* 파동 1: 파란색 */
+.badge-wave2 { background: #fee2e2; color: #b91c1c; } /* 파동 2: 붉은색 */
+.badge-super { background: #f3e8ff; color: #7e22ce; } /* 합성파: 보라색 */
+.badge-neutral { background: #f1f5f9; color: #475569; }
+
+.wave-slider {
+  width: 100%;
+  height: 7px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.wave-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.wave-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: var(--primary-hover);
+}
+
+/* 토글 버튼/옵션 라디오 */
+.toggle-options-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.toggle-btn:hover {
+  background: #f8fafc;
+  color: var(--text-main);
+}
+
+.toggle-btn.active {
+  background: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+/* 2차원 간섭 경로차 계측 결과 상자 */
+.path-diff-box {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.path-diff-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.path-diff-row strong {
+  color: var(--text-main);
+}
+
+.interference-condition-tag {
+  display: inline-block;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  text-align: center;
+  width: 100%;
+}
+
+.tag-constructive {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.tag-destructive {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.tag-intermediate {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* ========================================================
+   하단 탐구 학습 섹션 (예측, 분석 정리, 실생활 적용, 과학적 한계)
+   ======================================================== */
+.inquiry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.inquiry-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.inquiry-card h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* 예측하기 인터랙션 퀴즈 */
+.prediction-box {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.prediction-q {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 0.75rem;
+  line-height: 1.45;
+}
+
+.prediction-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.predict-opt-btn {
+  text-align: left;
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.predict-opt-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.predict-opt-btn.correct {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+  font-weight: 700;
+}
+
+.predict-opt-btn.wrong {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.predict-feedback {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  display: none;
+}
+
+/* 실생활 적용 사례 리스트 */
+.real-world-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.real-world-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.real-world-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.real-world-item h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.2rem;
+}
+
+.real-world-item p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* 과학적 한계 및 모델 안내 콜아웃 */
+.science-model-callout {
+  grid-column: 1 / -1;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid var(--primary-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.model-callout-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.model-callout-body h4 {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #1e40af;
+  margin-bottom: 0.35rem;
+}
+
+.model-callout-body p {
+  font-size: 0.88rem;
+  color: #1e3a8a;
+  line-height: 1.55;
+  word-break: keep-all;
+}
