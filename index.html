@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science Lab Hub — 과학 가상 실험실 포털</title>
+  <meta name="description" content="기체 법칙, 주기율표, 파동 간섭 등 다양한 과학 원리를 인터랙티브하게 탐구하는 과학 가상 실험실 포털입니다.">
+  
+  <!-- 웹 폰트 (Pretendard & Outfit) -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  
+  <style>
+    /* ========================================================
+       디자인 시스템 변수 (Design System Tokens)
+       ======================================================== */
+    :root {
+      --primary: #ff7700;
+      --primary-hover: #e65c00;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --card-hover-border: rgba(255, 119, 0, 0.5);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-sm: 8px;
+      --shadow-glow: 0 10px 30px -10px rgba(255, 119, 0, 0.3);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 초기화 및 기본 스타일 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 은은한 배경 오로라 빛 효과 */
+    .bg-glow-orange {
+      position: absolute;
+      top: -150px;
+      left: 15%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(255, 119, 0, 0.22) 0%, rgba(255, 119, 0, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(50px);
+      z-index: 0;
+    }
+
+    .bg-glow-blue {
+      position: absolute;
+      bottom: -100px;
+      right: 15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, rgba(56, 189, 248, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(60px);
+      z-index: 0;
+    }
+
+    /* 상단 네비게이션/헤더 */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 3.5rem 1.5rem 2rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      background: rgba(255, 119, 0, 0.15);
+      border: 1px solid rgba(255, 119, 0, 0.35);
+      color: #ffaa5b;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    header h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 30%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* 메인 콘텐츠 영역 (카드 그리드) */
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      width: 100%;
+      margin: 1.5rem auto 4rem;
+      padding: 0 1.5rem;
+      flex: 1;
+    }
+
+    .labs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.75rem;
+    }
+
+    /* 실험실 카드 공통 스타일 (글래스모피즘 & 호버 애니메이션) */
+    .lab-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lab-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: transparent;
+      transition: var(--transition);
+    }
+
+    .lab-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* 카드별 상단 컬러 라인 */
+    .lab-card[data-theme="gas"]:hover::before {
+      background: linear-gradient(90deg, #ff7700, #ffb03a);
+    }
+    .lab-card[data-theme="periodic"]:hover::before {
+      background: linear-gradient(90deg, #6366f1, #38bdf8);
+    }
+    .lab-card[data-theme="wave"]:hover::before {
+      background: linear-gradient(90deg, #10b981, #06b6d4);
+    }
+
+    /* 카드 내부 구성 */
+    .card-icon-box {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.9rem;
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .lab-card[data-theme="gas"] .card-icon-box {
+      background: rgba(255, 119, 0, 0.15);
+      border: 1px solid rgba(255, 119, 0, 0.3);
+    }
+    .lab-card[data-theme="periodic"] .card-icon-box {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .lab-card[data-theme="wave"] .card-icon-box {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .lab-card:hover .card-icon-box {
+      transform: scale(1.1) rotate(4deg);
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-title-row h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+
+    .card-category-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tag-gas {
+      background: rgba(255, 119, 0, 0.2);
+      color: #ff9d42;
+    }
+    .tag-periodic {
+      background: rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+    }
+    .tag-wave {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+    }
+
+    .card-description {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+      flex: 1;
+    }
+
+    /* 카드 하단 액션 버튼 형태 */
+    .card-action {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+      margin-top: auto;
+      transition: var(--transition);
+    }
+
+    .lab-card:hover .card-action {
+      gap: 0.85rem;
+      color: #ff9d42;
+    }
+
+    .lab-card[data-theme="periodic"]:hover .card-action {
+      color: #a5b4fc;
+    }
+
+    .lab-card[data-theme="wave"]:hover .card-action {
+      color: #6ee7b7;
+    }
+
+    .arrow-icon {
+      font-size: 1.1rem;
+      transition: var(--transition);
+    }
+
+    .lab-card:hover .arrow-icon {
+      transform: translateX(4px);
+    }
+
+    /* 하단 푸터 */
+    footer {
+      position: relative;
+      z-index: 10;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    footer a:hover {
+      color: #ff7700;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 2.5rem 1rem 1.5rem;
+      }
+      .labs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 은은한 조명 배경 데코레이션 -->
+  <div class="bg-glow-orange" aria-hidden="true"></div>
+  <div class="bg-glow-blue" aria-hidden="true"></div>
+
+  <!-- 메인 헤더 영역 -->
+  <header>
+    <div class="badge-pill">
+      <span>✨</span> 인터랙티브 시뮬레이션 포털
+    </div>
+    <h1>Science Lab Hub</h1>
+    <p>
+      직접 수치를 조작하고 실시간 그래프와 반응을 관찰하며<br>
+      자연과학의 핵심 법칙들을 생생하게 체험해 보세요.
+    </p>
+  </header>
+
+  <!-- 가상 실험실 카드 목록 -->
+  <main>
+    <section class="labs-grid" aria-label="가상 실험실 목록">
+
+      <!-- 1. 기체 법칙 가상 실험실 -->
+      <a href="./gas-laws/" class="lab-card" data-theme="gas" id="lab-gas-laws">
+        <div class="card-icon-box" aria-hidden="true">🎈</div>
+        <div class="card-title-row">
+          <h2>기체 법칙 가상 실험실</h2>
+          <span class="card-category-tag tag-gas">화학 / 물리</span>
+        </div>
+        <p class="card-description">
+          온도, 압력, 부피 사이의 관계를 피스톤과 분자 모형으로 직접 탐구하고, 보일·샤를·보일-샤를 법칙을 실시간 그래프로 학습합니다.
+        </p>
+        <div class="card-action">
+          <span>실험실 입장하기</span>
+          <span class="arrow-icon" aria-hidden="true">→</span>
+        </div>
+      </a>
+
+      <!-- 2. 인터랙티브 주기율표 -->
+      <a href="./periodic-table/" class="lab-card" data-theme="periodic" id="lab-periodic-table">
+        <div class="card-icon-box" aria-hidden="true">⚛️</div>
+        <div class="card-title-row">
+          <h2>디지털 인터랙티브 주기율표</h2>
+          <span class="card-category-tag tag-periodic">화학</span>
+        </div>
+        <p class="card-description">
+          118개 모든 원소의 전자 배치, 족/주기별 경향성, 끓는점과 녹는점 등 풍부한 원소 데이터와 필터링 도구를 제공합니다.
+        </p>
+        <div class="card-action">
+          <span>주기율표 열기</span>
+          <span class="arrow-icon" aria-hidden="true">→</span>
+        </div>
+      </a>
+
+      <!-- 3. 파동 간섭 시뮬레이션 -->
+      <a href="./wave-interference/" class="lab-card" data-theme="wave" id="lab-wave-interference">
+        <div class="card-icon-box" aria-hidden="true">🌊</div>
+        <div class="card-title-row">
+          <h2>파동 간섭 & 중첩 실험실</h2>
+          <span class="card-category-tag tag-wave">물리</span>
+        </div>
+        <p class="card-description">
+          두 파동의 위상차, 진폭, 파장에 따른 보강 간섭과 상쇄 간섭, 슬릿 실험 및 수면파의 간섭 무늬를 실시간 캔버스로 시각화합니다.
+        </p>
+        <div class="card-action">
+          <span>실험실 입장하기</span>
+          <span class="arrow-icon" aria-hidden="true">→</span>
+        </div>
+      </a>
+
+    </section>
+  </main>
+
+  <!-- 하단 정보 푸터 -->
+  <footer>
+    <p>© 2026 Science Lab Hub · GitHub Pages 배포</p>
+  </footer>
+
+</body>
+</html>
